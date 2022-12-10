@@ -90,13 +90,14 @@
         <button id="show" class="btn btn-secondary">show table data</button>
       </div>
     </div>
-
+<? php include 'index.php';?>
 <script type="module">  // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
     // TODO: Add SDKs for Firebase products that you want to use
     // https://firebase.google.com/docs/web/setup#available-libraries
     const key = "<?php echo $name; ?>";
+    const appid = "<?php echo $appid; ?>";
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
@@ -106,7 +107,7 @@
       projectId: "terarium-aca4d",
       storageBucket: "terarium-aca4d.appspot.com",
       messagingSenderId: "169115460005",
-      appId: "1:169115460005:web:bb6bb97390a9a253b0884c",
+      appId: appid,
       measurementId: "G-WH1MB7G0TH"
     };
 
@@ -204,7 +205,7 @@
       document.getElementById("display").style.display = "none";
       document.getElementById("update").style.display = "none";
       document.getElementById("insert").style.display = "block";
-      var inumber = document.getElementById('inumber').placeholder = count-1;
+      var inumber = document.getElementById('inumber').placeholder = count;
 
     });
     create.addEventListener('click', function(){
