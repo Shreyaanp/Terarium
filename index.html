@@ -70,106 +70,184 @@
           <button  class="btn btn-secondary" id = "create">insert</button>
         </div>
       </div>
+      <div id="update" style="display: none;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" >#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Age</th>
+            </tr>
+          </thead>
+          <tbody id="mytable1">
+            <tr>
+              <th scope="row" colspan="5">Loading...update</th>
+            </tr>
+          </tbody>
+        </table>
+        <button id="update1" class="btn btn-secondary">update</button>
+        <button id="show" class="btn btn-secondary">show table data</button>
+      </div>
     </div>
 
-    <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
+<script type="module">  // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+    const key = "<?php echo $name; ?>";
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: key,
+      authDomain: "terarium-aca4d.firebaseapp.com",
+      databaseURL: "https://terarium-aca4d-default-rtdb.firebaseio.com",
+      projectId: "terarium-aca4d",
+      storageBucket: "terarium-aca4d.appspot.com",
+      messagingSenderId: "169115460005",
+      appId: "1:169115460005:web:bb6bb97390a9a253b0884c",
+      measurementId: "G-WH1MB7G0TH"
+    };
 
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyBacaI8YjS0uVo9CuwjHSuqX52t72zCmfM",
-        authDomain: "terarium-aca4d.firebaseapp.com",
-        databaseURL: "https://terarium-aca4d-default-rtdb.firebaseio.com",
-        projectId: "terarium-aca4d",
-        storageBucket: "terarium-aca4d.appspot.com",
-        messagingSenderId: "169115460005",
-        appId: "1:169115460005:web:bb6bb97390a9a253b0884c",
-        measurementId: "G-WH1MB7G0TH"
-      };
 
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    import { getDatabase, ref, onValue, set,get,  child, update, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+    var count = 0;
+    const db = getDatabase();
+    //this is for showing all the value in the database
+    function selectdata(){
+      const starCountRef = ref(db, 'users');
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-      import { getDatabase, ref, onValue, set,get,  child, update, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
-      var count = 0;
-      const db = getDatabase();
-      //this is for showing all the value in the database
-      function selectdata(){
-        const starCountRef = ref(db, 'users');
-        onValue(starCountRef, (snapshot) => {
-          const data = snapshot.val();
-          console.log(data);
-          let html = '';
-          let i = 1;
-          for(let key in data){
-            html += `
-              <tr>
-                <th scope="row">${i}</th>
-                <td>${data[key].name}</td>
-                <td>${data[key].email}</td>
-                <td>${data[key].age}</td>
-              </tr>
-            `;
-            i++;
-            count = i;
-          }
-          document.getElementById('mytable').innerHTML = html;
-        });
-      }
-
-      function createinsertbtn(){
-        var idnumber = document.getElementById('inumber');
-        set(ref(db, 'users/' + idnumber.value), {
-          name: iname.value,
-          email: iemail.value,
-          age: iage.value
-        }).then(()=>{
-        alert("data was entered successfully");
-        var inumber = document.getElementById('inumber').value = "";
-        var inumber = document.getElementById('inumber').placeholder = count++;
-        var iname = document.getElementById('iname').value = "";
-        var iemail = document.getElementById('iemail').value = "";
-        var iage = document.getElementById('iage').value = "";
-      })
-      .catch((error)=>{
-        alert("data was not entered successfully");
+        let html = '';
+        let i = 1;
+        for(let key in data){
+          html += `
+            <tr>
+              <th scope="row">${i}</th>
+              <td >${data[key].name}</td>
+              <td>${data[key].email}</td>
+              <td>${data[key].age}</td>
+            </tr>
+          `;
+          i++;
+          count = i;
+        }
+        document.getElementById('mytable').innerHTML = html;
       });
-      }
+    }
 
+    function createinsertbtn(){
+      var idnumber = document.getElementById('inumber');
+      set(ref(db, 'users/' + idnumber.value), {
+        name: iname.value,
+        email: iemail.value,
+        age: iage.value
+      }).then(()=>{
+      alert("data was entered successfully");
+      var inumber = document.getElementById('inumber').value = "";
+      var inumber = document.getElementById('inumber').placeholder = count++;
+      var iname = document.getElementById('iname').value = "";
+      var iemail = document.getElementById('iemail').value = "";
+      var iage = document.getElementById('iage').value = "";
+    })
+    .catch((error)=>{
+      alert("data was not entered successfully");
+    });
+    }
+
+
+    function updateitem(){
+      const starCountRef = ref(db, 'users');
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+
+        let html = '';
+        let i = 1;
+        for(let key in data){
+          html += `
+            <tr>
+              <th scope="row">${i}</th>
+              <td contenteditable = "true" style="color : #000000; border-radius: 25px; background-color: rgb(231, 231, 231);">${data[key].name}</td>
+              <td contenteditable = "true" style="color : #000000; border-radius: 25px; background-color: rgb(231, 231, 231);">${data[key].email}</td>
+              <td contenteditable  = "true" style="color : #000000; border-radius: 25px; background-color: rgb(231, 231, 231);">${data[key].age}</td>
+            </tr>
+          `;
+          i++;
+          count = i;
+        }
+        document.getElementById('mytable1').innerHTML = html;
+      });
+    }
+    selectdata();
+    var iname = document.getElementById('iname');
+    var iemail = document.getElementById('iemail');
+    var iage = document.getElementById('iage');
+    var showbtn = document.getElementById('showbtn');
+    var insertbtn = document.getElementById('insertbtn');
+    var updatebtn = document.getElementById('updatebtn');
+    var deletebtn = document.getElementById('deletebtn');
+    var create = document.getElementById('create');
+    var update1 = document.getElementById('update1');
+
+    showbtn.addEventListener('click', function(){
+      document.getElementById("display").style.display = "block";
+      document.getElementById("insert").style.display = "none";
+      document.getElementById("update").style.display = "none";
       selectdata();
-      var iname = document.getElementById('iname');
-      var iemail = document.getElementById('iemail');
-      var iage = document.getElementById('iage');
-      var showbtn = document.getElementById('showbtn');
-      var insertbtn = document.getElementById('insertbtn');
-      var updatebtn = document.getElementById('updatebtn');
-      var deletebtn = document.getElementById('deletebtn');
-      var create = document.getElementById('create');
-
-      showbtn.addEventListener('click', function(){
-        document.getElementById("display").style.display = "block";
-        document.getElementById("insert").style.display = "none";
-        selectdata();
-      });
-      insertbtn.addEventListener('click', function(){
-        document.getElementById("display").style.display = "none";
-        document.getElementById("insert").style.display = "block";
-        var inumber = document.getElementById('inumber').placeholder = count-1;
+    });
+    insertbtn.addEventListener('click', function(){
+      document.getElementById("display").style.display = "none";
+      document.getElementById("update").style.display = "none";
+      document.getElementById("insert").style.display = "block";
+      var inumber = document.getElementById('inumber').placeholder = count-1;
 
     });
     create.addEventListener('click', function(){
-      createinsertbtn();
-
-
+    createinsertbtn();
+    });
+    updatebtn.addEventListener('click', function(){
+      document.getElementById("display").style.display = "none";
+      document.getElementById("insert").style.display = "none";
+      document.getElementById("update").style.display = "block";
+      updateitem();
     });
 
-    </script>
-    <script src="index.js"></script>
+    function updatevalue(){
+      var table = document.getElementById('mytable1');
+      var row = table.rows.length;
+      var col = table.rows[0].cells.length;
+      var data = [];
+
+      for(var i = 0; i < row; i++){
+        var  subdata=[];
+        for(var j = 0; j < col; j++){
+          subdata[j] = table.rows[i].cells[j].innerHTML;
+        }
+        data[i]=subdata;
+        //alert(subdata);
+      }
+      for(var i = 0; i < row; i++){
+        update(ref(db, 'users/' + i), {
+          name: data[i][1],
+          email: data[i][2],
+          age: data[i][3]
+        }).then(()=>{
+        //alert("data was updated successfully");
+      })
+      .catch((error)=>{
+        //alert("data was not updated successfully");
+      });
+      }
+    }
+    update1.addEventListener('click', function(){
+      updatevalue();
+    });
+
+</script>
     </body>
 </html>
