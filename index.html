@@ -89,6 +89,23 @@
         <button id="update1" class="btn btn-secondary">update</button>
         <button id="show" class="btn btn-secondary">show table data</button>
       </div>
+      <div id="delete" style = "display: none;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" >#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Age</th>
+            </tr>
+          </thead>
+          <tbody id="mytable">
+            <tr>
+              <th scope="row" colspan="5">Loading...</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
 
@@ -261,6 +278,29 @@
     update1.addEventListener('click', function(){
       updatevalue();
     });
+    deletebtn.addEventListener('click',function(){
+      const countdelete = ref(db, 'users');
+      onValue(countdelete, (snapshot) => {
+        let data = snapshot.val();
+
+        let html = '';
+        let i = 1;
+        for(let key in data){
+          html += `
+            <tr>
+              <th scope="row">${i}</th>
+              <td contenteditable = "true" style="color : #000000; border-radius: 25px; background-color: rgb(231, 231, 231);">${data[key].name}</td>
+              <td contenteditable = "true" style="color : #000000; border-radius: 25px; background-color: rgb(231, 231, 231);">${data[key].email}</td>
+              <td contenteditable  = "true" style="color : #000000; border-radius: 25px; background-color: rgb(231, 231, 231);">${data[key].age}</td>
+            </tr>
+          `;
+          i++;
+          count = i;
+        }
+        document.getElementById('mytable1').innerHTML = html;
+      });
+    }
+    })
 
 </script>
     </body>
