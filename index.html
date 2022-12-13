@@ -286,47 +286,6 @@
     update1.addEventListener('click', function(){
       updatevalue();
     });
-    function showdeletebtn(){
-      document.getElementById("display").style.display = "none";
-      document.getElementById("insert").style.display = "none";
-      document.getElementById("update").style.display = "none";
-      document.getElementById("delete").style.display = "block";
-
-      const starCountRef12 = ref(db, 'users');
-      onValue(starCountRef12, (snapshot) => {
-        let data = snapshot.val();
-
-        let html = '';
-        let i = 0;
-        for(let key in data){
-          html += `
-            <tr>
-              <th scope="row">${i}</th>
-              <td >${data[key].name}</td>
-              <td>${data[key].email}</td>
-              <td>${data[key].age}</td>
-              <td><input type = "checkbox" id = "${i}"></td>
-            </tr>
-          `;
-          i++;
-          count = i;
-        }
-        document.getElementById('deletetable').innerHTML = html;
-      });
-    }
-    deletebtn.addEventListener('click',function(){
-      showdeletebtn();
-    });
-    function deletevalurefn(){
-      var table = document.getElementById('deletetable');
-      var row = table.rows.length;
-      var col = table.rows[0].cells.length;
-      var data = [];
-      for(var i = 0; i < row; i++){
-        var  subdata=[];
-        for(var j = 0; j < col; j++){
-          subdata[j] = table.rows[i].cells[j].innerHTML;
-        }
 
         if(document.getElementById(i).checked){
           remove(ref(db, 'users/' + i)).then(()=>{
