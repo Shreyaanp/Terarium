@@ -89,6 +89,26 @@
         <button id="update1" class="btn btn-secondary">update</button>
         <button id="show" class="btn btn-secondary">show table data</button>
       </div>
+      <div id="delete" style = "display: none;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" >#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Age</th>
+              <th scope="col">Select</th>
+            </tr>
+          </thead>
+          <tbody id="deletetable">
+            <tr>
+              <th scope="row" colspan="5">Loading...</th>
+            </tr>
+          </tbody>
+        </table>
+        <button id="deletevalue" class="btn btn-secondary">Delete</button>
+        <button id="deleteallvalue" class="btn btn-secondary">Delete All</button>
+      </div>
     </div>
 
 
@@ -134,7 +154,7 @@
         const data = snapshot.val();
 
         let html = '';
-        let i = 1;
+        let i = 0;
         for(let key in data){
           html += `
             <tr>
@@ -204,18 +224,22 @@
     var deletebtn = document.getElementById('deletebtn');
     var create = document.getElementById('create');
     var update1 = document.getElementById('update1');
+    var deletedata = document.getElementById('deletevalue');
+    var deleteallv = document.getElementById('deleteallvalue');
 
     showbtn.addEventListener('click', function(){
       document.getElementById("display").style.display = "block";
       document.getElementById("insert").style.display = "none";
       document.getElementById("update").style.display = "none";
+      document.getElementById("delete").style.display = "none";
       selectdata();
     });
 
     insertbtn.addEventListener('click', function(){
       document.getElementById("display").style.display = "none";
-      document.getElementById("update").style.display = "none";
       document.getElementById("insert").style.display = "block";
+      document.getElementById("update").style.display = "none";
+      document.getElementById("delete").style.display = "none";
       var inumber = document.getElementById('inumber').placeholder = count;
 
     });
@@ -228,6 +252,7 @@
       document.getElementById("display").style.display = "none";
       document.getElementById("insert").style.display = "none";
       document.getElementById("update").style.display = "block";
+      document.getElementById("delete").style.display = "none";
       updateitem();
     });
 
@@ -261,7 +286,77 @@
     update1.addEventListener('click', function(){
       updatevalue();
     });
+    function showdeletebtn(){
+      document.getElementById("display").style.display = "none";
+      document.getElementById("insert").style.display = "none";
+      document.getElementById("update").style.display = "none";
+      document.getElementById("delete").style.display = "block";
 
+      const starCountRef12 = ref(db, 'users');
+      onValue(starCountRef12, (snapshot) => {
+        let data = snapshot.val();
+
+        let html = '';
+        let i = 0;
+        for(let key in data){
+          html += `
+            <tr>
+              <th scope="row">${i}</th>
+              <td >${data[key].name}</td>
+              <td>${data[key].email}</td>
+              <td>${data[key].age}</td>
+              <td><input type = "checkbox" id = "${i}"></td>
+            </tr>
+          `;
+          i++;
+          count = i;
+        }
+        document.getElementById('deletetable').innerHTML = html;
+      });
+    }
+    deletebtn.addEventListener('click',function(){
+      showdeletebtn();
+    });
+    function deletevalurefn(){
+      var table = document.getElementById('deletetable');
+      var row = table.rows.length;
+      var col = table.rows[0].cells.length;
+      var data = [];
+      for(var i = 0; i < row; i++){
+        var  subdata=[];
+        for(var j = 0; j < col; j++){
+          subdata[j] = table.rows[i].cells[j].innerHTML;
+        }
+
+        if(document.getElementById(i).checked){
+          remove(ref(db, 'users/' + i)).then(()=>{
+        alert("data was deleted successfully");
+      })
+      .catch((error)=>{
+        alert("data was not deleted successfully");
+      });
+          }
+        data[i]=subdata;
+      }
+    }
+    deletedata.addEventListener('click',function(){
+        deletevalurefn();
+    })
+    function deletealldb(){
+      var row = table.rows.length;
+      for(var i = 0; i < row; i++){
+        remove(ref(db, 'users/' + i)).then(()=>{
+        alert("data was deleted successfully");
+      })
+      .catch((error)=>{
+        alert("data was not deleted successfully");
+      });
+    }
+    }
+    deleteallv.addEventListener('click',function(){
+        alert("clcickeed");
+        deletealldb();
+    });
 </script>
     </body>
 </html>
